@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>Shop product list</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="http://netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+  <style type="text/css">
+      body {
+          margin-top: 20px;
+          background: #f1f2f7;
+      }
+
+      /*panel*/
+      .panel {
+          border: none;
+          box-shadow: none;
+      }
+
+      .panel-heading {
+          border-color: #eff2f7;
+          font-size: 16px;
+          font-weight: 300;
+      }
+
+      .panel-title {
+          color: #2A3542;
+          font-size: 14px;
+          font-weight: 400;
+          margin-bottom: 0;
+          margin-top: 0;
+          font-family: 'Open Sans', sans-serif;
+      }
+
+
+      /*product list*/
+
+      .prod-cat li a {
+          border-bottom: 1px dashed #d9d9d9;
+      }
+
+      .prod-cat li a {
+          color: #3b3b3b;
+      }
+
+      .prod-cat li ul {
+          margin-left: 30px;
+      }
+
+      .prod-cat li ul li a {
+          border-bottom: none;
+      }
+
+      .prod-cat li ul li a:hover, .prod-cat li ul li a:focus, .prod-cat li ul li.active a, .prod-cat li a:hover, .prod-cat li a:focus, .prod-cat li a.active {
+          background: none;
+          color: #ff7261;
+      }
+
+      .pro-lab {
+          margin-right: 20px;
+          font-weight: normal;
+      }
+
+      .pro-sort {
+          padding-right: 20px;
+          float: left;
+      }
+
+      .pro-page-list {
+          margin: 5px 0 0 0;
+      }
+
+      .product-list img {
+          width: 100%;
+          border-radius: 4px 4px 0 0;
+          -webkit-border-radius: 4px 4px 0 0;
+      }
+
+      .product-list .pro-img-box {
+          position: relative;
+      }
+
+      .adtocart {
+          background: #fc5959;
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          -webkit-border-radius: 50%;
+          color: #fff;
+          display: inline-block;
+          text-align: center;
+          border: 3px solid #fff;
+          left: 45%;
+          bottom: -25px;
+          position: absolute;
+      }
+
+      .adtocart i {
+          color: #fff;
+          font-size: 25px;
+          line-height: 42px;
+      }
+
+      .pro-title {
+          color: #5A5A5A;
+          display: inline-block;
+          margin-top: 20px;
+          font-size: 16px;
+      }
+
+      .product-list .price {
+          color: #fc5959;
+          font-size: 15px;
+      }
+
+      .pro-img-details {
+          margin-left: -15px;
+      }
+
+      .pro-img-details img {
+          width: 100%;
+      }
+
+      .pro-d-title {
+          font-size: 16px;
+          margin-top: 0;
+      }
+
+      .product_meta {
+          border-top: 1px solid #eee;
+          border-bottom: 1px solid #eee;
+          padding: 10px 0;
+          margin: 15px 0;
+      }
+
+      .product_meta span {
+          display: block;
+          margin-bottom: 10px;
+      }
+
+      .product_meta a, .pro-price {
+          color: #fc5959;
+      }
+
+      .pro-price, .amount-old {
+          font-size: 18px;
+          padding: 0 10px;
+      }
+
+      .amount-old {
+          text-decoration: line-through;
+      }
+
+      .quantity {
+          width: 120px;
+      }
+
+      .pro-img-list {
+          margin: 10px 0 0 -15px;
+          width: 100%;
+          display: inline-block;
+      }
+
+      .pro-img-list a {
+          float: left;
+          margin-right: 10px;
+          margin-bottom: 10px;
+      }
+
+      .pro-d-head {
+          font-size: 18px;
+          font-weight: 300;
+      }
+  </style>
+</head>
+<body>
+<div class="container bootdey">
+  <div class="navbar navbar-default navbar-static-top">
+    <div class="container bootstrap snippets bootdey">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="{% url 'base' %}">B-Store</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav pull-right" style="margin-right: 15px">
+          <li class="active"><a href="{% url 'base' %}">Home</a></li>
+          <li><a href="{% url 'contact' %}">Contact</a></li>
+          {% if request.user.is_authenticated %}
+            <li class="dropdown"><a href="#" id="drop1" data-toggle="dropdown" class="dropdown-toggle"
+                                    role="button">{{ request.user }} <b class="caret"></b></a>
+              <ul role="menu" class="dropdown-menu" aria-labelledby="drop1">
+                <li role="presentation"><a href="{% url 'profile' %}" role="menuitem">Профиль</a></li>
+                <li role="presentation"><a href="{% url 'store_logout' %}" role="menuitem">Выйти</a></li>
+              </ul>
+            </li>
+          {% else %}
+
+            <li><a href="{% url 'store_login' %}">Войти</a></li>
+          {% endif %}
+
+        </ul>
+      </div><!--/.nav-collapse -->
+    </div>
+  </div>
+  <div class="col-md-3">
+    {% if categories %}
+      <section class="panel">
+        <header class="panel-heading">
+          Категория
+        </header>
+        <div class="panel-body">
+          <ul class="nav prod-cat">
+            {% for category in categories %}
+              <li>
+                <a href="#"><i class="fa fa-angle-right"></i>{{ category }}</a>
+                <ul class="nav">
+                  {% for subcategory in category.subcategories.all %}
+                    <li class="active"><a href="{% url 'category' pk=subcategory.id %}">{{ subcategory }}</a></li>
+                  {% endfor %}
+                </ul>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </section>
+    {% endif %}
+  </div>
+  <div class="col-md-9">
+
+    <div class="row product-list">
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-success" role="alert">
+            <strong>{{ message }}</strong>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        {% endfor %}
+      {% endif %}
+      {% block content %}
+
+      {% endblock content %}
+    </div>
+  </div>
+</div>
+
+
+<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script src="http://netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+
+</script>
+</body>
+</html>

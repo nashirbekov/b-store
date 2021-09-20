@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <nav aria-label="breadcrumb" class="mt-3">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'base' %}">Главная</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'category' pk=product.category.id %}">{{ product.category.name }}</a>
+      </li>
+      <li class="breadcrumb-item active" aria-current="page">{{ product.name }}</li>
+    </ol>
+  </nav>
+  <div class="card" style="width: 60rem;">
+    <img src="{{ product.image.url }}" class="img-fluid">
+    <div class="card-body">
+      <h5 class="card-title">{{ product.name }}</h5>
+      <p>Цена: {{ product.price }} сом</p>
+      <p>Описание: {{ product.description }}</p>
+    </div>
+  </div>
+{% endblock content %}
